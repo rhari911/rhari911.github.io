@@ -51,7 +51,6 @@
     </script>
     
     <!-- Google Analytics 4 -->
-    <!-- Replace G-XXXXXXXXXX with your actual Measurement ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-NDNN7SQ40H"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -337,16 +336,16 @@
                 Frankfurt School of Finance and Management</p>
                 
                 <div class="contact-links">
-                    <a href="mailto:h.ramasubramanian@fs.de" onclick="gtag('event', 'email_contact', { 'event_category': 'contact', 'event_label': 'header_email' });">
+                    <a href="mailto:h.ramasubramanian@fs.de">
                         <i class="fas fa-envelope"></i> Email
                     </a>
-                    <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=5049784" target="_blank" onclick="gtag('event', 'external_link_click', { 'event_category': 'external_links', 'event_label': 'ssrn', 'value': 1 });">
+                    <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=5049784" target="_blank">
                         <i class="fas fa-file-alt"></i> SSRN
                     </a>
-                    <a href="https://orcid.org/0000-0002-7512-5831" target="_blank" onclick="gtag('event', 'external_link_click', { 'event_category': 'external_links', 'event_label': 'orcid', 'value': 1 });">
+                    <a href="https://orcid.org/0000-0002-7512-5831" target="_blank">
                         <i class="fas fa-id-badge"></i> ORCID
                     </a>
-                    <a href="https://scholar.google.com/citations?user=PRjfYZYAAAAJ&hl=en" target="_blank" onclick="gtag('event', 'external_link_click', { 'event_category': 'external_links', 'event_label': 'google_scholar', 'value': 1 });">
+                    <a href="https://scholar.google.com/citations?user=PRjfYZYAAAAJ&hl=en" target="_blank">
                         <i class="fas fa-graduation-cap"></i> Google Scholar
                     </a>
                 </div>
@@ -509,7 +508,7 @@
             <div class="container">
                 <h2>Curriculum Vitae</h2>
                 <div class="cv-download">
-                    <a href="./files/Hari_Ramasubramanian_CV.pdf" target="_blank" download="Hari_Ramasubramanian_CV.pdf" onclick="gtag('event', 'cv_download', { 'event_category': 'downloads', 'event_label': 'pdf_cv', 'value': 1 });">
+                    <a href="./files/Hari_Ramasubramanian_CV.pdf" target="_blank" download="Hari_Ramasubramanian_CV.pdf">
                         <i class="fas fa-download"></i> Download CV (PDF)
                     </a>
                 </div>
@@ -581,6 +580,111 @@
                 link.classList.remove('active');
                 if (link.getAttribute('href') === `#${current}`) {
                     link.classList.add('active');
+                }
+            });
+        });
+
+        // Enhanced Google Analytics Tracking
+        document.addEventListener('DOMContentLoaded', function() {
+            // Track CV downloads
+            const cvLink = document.querySelector('a[href*="Hari_Ramasubramanian_CV.pdf"]');
+            if (cvLink) {
+                cvLink.addEventListener('click', function() {
+                    gtag('event', 'file_download', {
+                        'event_category': 'downloads',
+                        'event_label': 'CV_PDF',
+                        'file_name': 'Hari_Ramasubramanian_CV.pdf'
+                    });
+                });
+            }
+            
+            // Track email clicks
+            document.querySelectorAll('a[href^="mailto:"]').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    gtag('event', 'contact', {
+                        'event_category': 'email',
+                        'event_label': 'contact_email'
+                    });
+                });
+            });
+            
+            // Track all external research links
+            document.querySelectorAll('a[href^="http"]:not([href*="hariramasubramanian.com"]):not([href*="raisingamathematician.com"])').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    const url = new URL(this.href);
+                    const hostname = url.hostname;
+                    let linkType = 'external_link';
+                    
+                    // Categorize different types of external links
+                    if (hostname.includes('ssrn.com')) {
+                        linkType = 'ssrn_profile';
+                    } else if (hostname.includes('orcid.org')) {
+                        linkType = 'orcid_profile';
+                    } else if (hostname.includes('scholar.google.com')) {
+                        linkType = 'google_scholar';
+                    } else if (hostname.includes('publications.aaahq.org')) {
+                        linkType = 'research_paper';
+                    } else if (hostname.includes('jmir.org')) {
+                        linkType = 'research_paper';
+                    } else if (hostname.includes('proquest.com')) {
+                        linkType = 'research_paper';
+                    } else if (hostname.includes('corpgov.law.harvard.edu')) {
+                        linkType = 'press_coverage';
+                    }
+                    
+                    gtag('event', 'click', {
+                        'event_category': linkType,
+                        'event_label': hostname,
+                        'link_url': this.href
+                    });
+                });
+            });
+            
+            // Track section navigation
+            document.querySelectorAll('.nav-links a[href^="#"]').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    const section = this.getAttribute('href').substring(1);
+                    gtag('event', 'navigation', {
+                        'event_category': 'internal_navigation',
+                        'event_label': section
+                    });
+                });
+            });
+            
+            // Track scroll depth milestones
+            let maxScroll = 0;
+            let scrollMilestones = [25, 50, 75, 90, 100];
+            
+            window.addEventListener('scroll', function() {
+                const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+                
+                scrollMilestones.forEach(function(milestone) {
+                    if (scrollPercent >= milestone && maxScroll < milestone) {
+                        maxScroll = milestone;
+                        gtag('event', 'scroll_depth', {
+                            'event_category': 'engagement',
+                            'event_label': milestone + '_percent',
+                            'value': milestone
+                        });
+                    }
+                });
+            });
+            
+            // Track time spent on site
+            let startTime = Date.now();
+            let timeSpentTracked = false;
+            
+            window.addEventListener('beforeunload', function() {
+                if (!timeSpentTracked) {
+                    const timeSpent = Math.round((Date.now() - startTime) / 1000);
+                    if (timeSpent > 30) { // Only track if user spent more than 30 seconds
+                        gtag('event', 'time_on_site', {
+                            'event_category': 'engagement',
+                            'event_label': 'seconds_spent',
+                            'value': timeSpent
+                        });
+                        timeSpentTracked = true;
+                    }
                 }
             });
         });
