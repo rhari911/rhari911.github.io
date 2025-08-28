@@ -50,6 +50,16 @@
     }
     </script>
     
+    <!-- Google Analytics 4 -->
+    <!-- Replace G-XXXXXXXXXX with your actual Measurement ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NDNN7SQ40H"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NDNN7SQ40H');
+    </script>
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -327,16 +337,16 @@
                 Frankfurt School of Finance and Management</p>
                 
                 <div class="contact-links">
-                    <a href="mailto:h.ramasubramanian@fs.de">
+                    <a href="mailto:h.ramasubramanian@fs.de" onclick="gtag('event', 'email_contact', { 'event_category': 'contact', 'event_label': 'header_email' });">
                         <i class="fas fa-envelope"></i> Email
                     </a>
-                    <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=5049784" target="_blank">
+                    <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=5049784" target="_blank" onclick="gtag('event', 'external_link_click', { 'event_category': 'external_links', 'event_label': 'ssrn', 'value': 1 });">
                         <i class="fas fa-file-alt"></i> SSRN
                     </a>
-                    <a href="https://orcid.org/0000-0002-7512-5831" target="_blank">
+                    <a href="https://orcid.org/0000-0002-7512-5831" target="_blank" onclick="gtag('event', 'external_link_click', { 'event_category': 'external_links', 'event_label': 'orcid', 'value': 1 });">
                         <i class="fas fa-id-badge"></i> ORCID
                     </a>
-                    <a href="https://scholar.google.com/citations?user=PRjfYZYAAAAJ&hl=en" target="_blank">
+                    <a href="https://scholar.google.com/citations?user=PRjfYZYAAAAJ&hl=en" target="_blank" onclick="gtag('event', 'external_link_click', { 'event_category': 'external_links', 'event_label': 'google_scholar', 'value': 1 });">
                         <i class="fas fa-graduation-cap"></i> Google Scholar
                     </a>
                 </div>
@@ -499,7 +509,7 @@
             <div class="container">
                 <h2>Curriculum Vitae</h2>
                 <div class="cv-download">
-                    <a href="./files/Hari_Ramasubramanian_CV.pdf" target="_blank" download="Hari_Ramasubramanian_CV.pdf">
+                    <a href="./files/Hari_Ramasubramanian_CV.pdf" target="_blank" download="Hari_Ramasubramanian_CV.pdf" onclick="gtag('event', 'cv_download', { 'event_category': 'downloads', 'event_label': 'pdf_cv', 'value': 1 });">
                         <i class="fas fa-download"></i> Download CV (PDF)
                     </a>
                 </div>
