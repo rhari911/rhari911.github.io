@@ -80,6 +80,21 @@
             padding: 0 20px;
         }
 
+        /* Privacy Notice Styles */
+        .privacy-notice {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            border-radius: 4px;
+        }
+
+        .privacy-notice h4 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
         header {
             background: white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -507,8 +522,15 @@
         <section id="cv" class="section">
             <div class="container">
                 <h2>Curriculum Vitae</h2>
+                
+                <!-- Privacy Notice for Data Collection -->
+                <div class="privacy-notice">
+                    <h4><i class="fas fa-info-circle"></i> Data Collection Notice</h4>
+                    <p>This website collects anonymized analytics data including download statistics, geographic location (country/region), and usage patterns to improve content and understand visitor engagement. No personally identifiable information is stored. By downloading files or using this website, you consent to this data collection. For questions about data usage, please contact <a href="mailto:h.ramasubramanian@fs.de" style="color: #3498db;">h.ramasubramanian@fs.de</a>.</p>
+                </div>
+                
                 <div class="cv-download">
-                    <a href="./files/Hari_Ramasubramanian_CV.pdf" target="_blank" download="Hari_Ramasubramanian_CV.pdf">
+                    <a href="./files/Hari_Ramasubramanian_CV.pdf" target="_blank" download="Hari_Ramasubramanian_CV.pdf" id="cv-download-link">
                         <i class="fas fa-download"></i> Download CV (PDF)
                     </a>
                 </div>
@@ -549,145 +571,93 @@
     </footer>
 
     <script>
-        // Smooth scrolling for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Update active navigation link on scroll
-        window.addEventListener('scroll', function() {
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.nav-links a');
-            
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 100;
-                if (scrollY >= sectionTop) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${current}`) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
-        // Enhanced Google Analytics Tracking
-        document.addEventListener('DOMContentLoaded', function() {
-            // Track CV downloads
-            const cvLink = document.querySelector('a[href*="Hari_Ramasubramanian_CV.pdf"]');
-            if (cvLink) {
-                cvLink.addEventListener('click', function() {
-                    gtag('event', 'file_download', {
-                        'event_category': 'downloads',
-                        'event_label': 'CV_PDF',
-                        'file_name': 'Hari_Ramasubramanian_CV.pdf'
-                    });
-                });
-            }
-            
-            // Track email clicks
-            document.querySelectorAll('a[href^="mailto:"]').forEach(function(link) {
-                link.addEventListener('click', function() {
-                    gtag('event', 'contact', {
-                        'event_category': 'email',
-                        'event_label': 'contact_email'
-                    });
-                });
-            });
-            
-            // Track all external research links
-            document.querySelectorAll('a[href^="http"]:not([href*="hariramasubramanian.com"]):not([href*="raisingamathematician.com"])').forEach(function(link) {
-                link.addEventListener('click', function() {
-                    const url = new URL(this.href);
-                    const hostname = url.hostname;
-                    let linkType = 'external_link';
-                    
-                    // Categorize different types of external links
-                    if (hostname.includes('ssrn.com')) {
-                        linkType = 'ssrn_profile';
-                    } else if (hostname.includes('orcid.org')) {
-                        linkType = 'orcid_profile';
-                    } else if (hostname.includes('scholar.google.com')) {
-                        linkType = 'google_scholar';
-                    } else if (hostname.includes('publications.aaahq.org')) {
-                        linkType = 'research_paper';
-                    } else if (hostname.includes('jmir.org')) {
-                        linkType = 'research_paper';
-                    } else if (hostname.includes('proquest.com')) {
-                        linkType = 'research_paper';
-                    } else if (hostname.includes('corpgov.law.harvard.edu')) {
-                        linkType = 'press_coverage';
-                    }
-                    
-                    gtag('event', 'click', {
-                        'event_category': linkType,
-                        'event_label': hostname,
-                        'link_url': this.href
-                    });
-                });
-            });
-            
-            // Track section navigation
-            document.querySelectorAll('.nav-links a[href^="#"]').forEach(function(link) {
-                link.addEventListener('click', function() {
-                    const section = this.getAttribute('href').substring(1);
-                    gtag('event', 'navigation', {
-                        'event_category': 'internal_navigation',
-                        'event_label': section
-                    });
-                });
-            });
-            
-            // Track scroll depth milestones
-            let maxScroll = 0;
-            let scrollMilestones = [25, 50, 75, 90, 100];
-            
-            window.addEventListener('scroll', function() {
-                const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+        // Enhanced Advanced Tracking System
+        class AdvancedTracker {
+            constructor() {
+                this.sessionId = this.generateSessionId();
+                this.startTime = Date.now();
+                this.maxScroll = 0;
+                this.scrollMilestones = [25, 50, 75, 90, 100];
+                this.timeSpentTracked = false;
+                this.detailedTracking = true; // Enable detailed tracking
                 
-                scrollMilestones.forEach(function(milestone) {
-                    if (scrollPercent >= milestone && maxScroll < milestone) {
-                        maxScroll = milestone;
-                        gtag('event', 'scroll_depth', {
-                            'event_category': 'engagement',
-                            'event_label': milestone + '_percent',
-                            'value': milestone
-                        });
-                    }
-                });
-            });
-            
-            // Track time spent on site
-            let startTime = Date.now();
-            let timeSpentTracked = false;
-            
-            window.addEventListener('beforeunload', function() {
-                if (!timeSpentTracked) {
-                    const timeSpent = Math.round((Date.now() - startTime) / 1000);
-                    if (timeSpent > 30) { // Only track if user spent more than 30 seconds
-                        gtag('event', 'time_on_site', {
-                            'event_category': 'engagement',
-                            'event_label': 'seconds_spent',
-                            'value': timeSpent
-                        });
-                        timeSpentTracked = true;
-                    }
+                this.initializeTracking();
+            }
+
+            generateSessionId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            }
+
+            async getDetailedLocationData() {
+                try {
+                    // Multiple IP geolocation services for better accuracy
+                    const services = [
+                        'https://api.ipify.org?format=json', // Get IP
+                        'http://ip-api.com/json/', // Get detailed info
+                        'https://ipapi.co/json/', // Backup service
+                        'https://api.ipdata.co?api-key=test' // Another backup
+                    ];
+
+                    // Get IP address first
+                    const ipResponse = await fetch(services[0]);
+                    const ipData = await ipResponse.json();
+                    const userIP = ipData.ip;
+
+                    // Get detailed location info
+                    const locationResponse = await fetch(`http://ip-api.com/json/${userIP}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query`);
+                    const locationData = await locationResponse.json();
+
+                    return {
+                        ip: userIP,
+                        country: locationData.country,
+                        region: locationData.regionName,
+                        city: locationData.city,
+                        isp: locationData.isp,
+                        org: locationData.org,
+                        asname: locationData.asname,
+                        timezone: locationData.timezone,
+                        lat: locationData.lat,
+                        lon: locationData.lon,
+                        isUniversity: this.detectUniversityIP(locationData),
+                        sessionId: this.sessionId
+                    };
+                } catch (error) {
+                    console.log('Location tracking error:', error);
+                    return {
+                        ip: 'unknown',
+                        country: 'unknown',
+                        error: error.message,
+                        sessionId: this.sessionId
+                    };
                 }
-            });
-        });
-    </script>
-</body>
-</html>
+            }
+
+            detectUniversityIP(locationData) {
+                // Common indicators of university/academic IP addresses
+                const universityIndicators = [
+                    'university', 'college', 'academic', 'edu', 'school',
+                    'institut', 'research', 'campus', 'student', '.edu',
+                    'higher education', 'learning', 'academy'
+                ];
+
+                const orgName = (locationData.org || '').toLowerCase();
+                const ispName = (locationData.isp || '').toLowerCase();
+                const asName = (locationData.asname || '').toLowerCase();
+
+                const textToCheck = `${orgName} ${ispName} ${asName}`;
+                
+                return {
+                    isLikelyUniversity: universityIndicators.some(indicator => 
+                        textToCheck.includes(indicator)
+                    ),
+                    orgName: locationData.org,
+                    ispName: locationData.isp,
+                    asName: locationData.asname,
+                    confidence: this.calculateUniversityConfidence(textToCheck, universityIndicators)
+                };
+            }
+
+            calculateUniversityConfidence(text, indicators) {
+                const matches = indicators.filter(indicator => text.includes(indicator));
+                return Math.min(matches.length * 25, 100); // Max 100% confidence
+            }
